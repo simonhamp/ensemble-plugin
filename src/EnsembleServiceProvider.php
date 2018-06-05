@@ -16,7 +16,7 @@ class EnsembleServiceProvider extends ServiceProvider
     {
         PackageChecker::setCwd(base_path());
 
-        $key = base64_decode(substr(env('ENSEMBLE_PRIVATE_KEY'), 7));
+        $key = base64_decode(env('ENSEMBLE_PRIVATE_KEY'));
         $cipher = env('ENSEMBLE_CIPHER', 'AES-256-CBC');
 
         $this->encrypter = new Encrypter($key, $cipher);
