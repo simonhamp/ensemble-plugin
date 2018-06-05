@@ -1,0 +1,35 @@
+{
+    "name": "simonhamp/ensemble-plugin",
+    "description": "Connects your composer project to Ensemble (ensemble.app)",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon Hamp",
+            "email": "simon.hamp@me.com"
+        }
+    ],
+    "require": {
+        "symfony/process": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "SimonHamp\\Ensemble\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SimonHamp\\Ensemble\\Tests\\": "tests/"
+        }
+    },
+    "extra" : {
+        "laravel": {
+            "providers": [
+                "SimonHamp\\Ensemble\\EnsembleServiceProvider"
+            ]
+        }
+    }
+}
