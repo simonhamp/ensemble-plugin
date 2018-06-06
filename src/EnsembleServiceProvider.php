@@ -30,18 +30,21 @@ class EnsembleServiceProvider extends ServiceProvider
 
     protected function registerRoutes()
     {
-        $this->app['router']->post('ensemble', function (Request $request) {
-            $key = $request->input('key');
+        $this->app['router']->post(
+            env('ENSEMBLE_ENDPOINT', 'ensemble'),
+            function (Request $request) {
+                $key = $request->input('key');
 
-            $params = $this->parseParams($key);
+                $params = $this->parseParams($key);
 
-            return $this->payload(
-                "ensemble_{$params->packages}",
-                function () use ($params) {
-                    return PackageChecker::{$params->packages}();
-                }
-            );
-        });
+                return $this->payload(
+                    "ensemble_{$params->packages}",
+                    function () use ($params) {
+                        return PackageChecker::{$params->packages}();
+                    }
+                );
+            }
+        );
     }
 
     protected function parseParams($key)
