@@ -5,7 +5,6 @@ namespace SimonHamp\Ensemble;
 use Illuminate\Http\Request;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Cache;
-use SimonHamp\Ensemble\PackageChecker;
 use Illuminate\Support\ServiceProvider;
 
 class EnsembleServiceProvider extends ServiceProvider
