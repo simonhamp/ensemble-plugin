@@ -79,11 +79,15 @@ class EnsembleServiceProvider extends ServiceProvider
         return ! in_array($method, ['all', 'outdated', 'minor']);
     }
 
-    protected function payload($key, $callback)
+    protected function payload($cache_key, $callback)
     {
-        $payload = Cache::remember($key, 1440, function () use ($callback) {
-            return $this->encrypter->encrypt($callback());
-        });
+        $payload = Cache::remember(
+            $cache_key,
+            env('ENSEMBLE_CACHE_TTL', 1440),
+            function () use ($callback) {
+                return $this->encrypter->encrypt($callback());
+            }
+        );
 
         return response()->json([
             'payload' => $payload,
