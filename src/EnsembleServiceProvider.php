@@ -46,9 +46,12 @@ class EnsembleServiceProvider extends ServiceProvider
 
     protected function parseParams($key)
     {
-        $payload = json_decode($this->encrypter->decrypt($key));
-
-        return $this->checkPayload($payload);
+        return tap(
+            json_decode($this->encrypter->decrypt($key)),
+            function ($payload) {
+                $this->checkPayload($payload);
+            }
+        );
     }
 
     protected function checkPayload($payload)
@@ -60,8 +63,6 @@ class EnsembleServiceProvider extends ServiceProvider
         if ($this->isInvalidMethod($payload->packages)) {
             throw new \Exception('Invalid method');
         }
-
-        return $payload;
     }
 
     protected function hasExpired($expires)
