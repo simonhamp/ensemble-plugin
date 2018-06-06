@@ -14,6 +14,10 @@ class EnsembleServiceProvider extends ServiceProvider
 
     public function register()
     {
+        if (! env('ENSEMBLE_ENABLED', false)) {
+            return;
+        }
+
         PackageChecker::setCwd(base_path());
 
         $key = base64_decode(env('ENSEMBLE_PRIVATE_KEY'));
