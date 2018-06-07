@@ -63,10 +63,6 @@ class EnsembleServiceProvider extends ServiceProvider
         if ($this->hasExpired($payload->expires)) {
             throw new \Exception('Key has expired');
         }
-
-        if ($this->isInvalidMethod($payload->packages)) {
-            throw new \Exception('Invalid method');
-        }
     }
 
     protected function hasExpired($expires)
@@ -76,11 +72,6 @@ class EnsembleServiceProvider extends ServiceProvider
         $timeout = new \DateTime($expires, $tz);
 
         return $now->diff($timeout)->invert;
-    }
-
-    protected function isInvalidMethod($method)
-    {
-        return ! in_array($method, ['all', 'outdated', 'minor']);
     }
 
     protected function payload($cache_key, $callback)
