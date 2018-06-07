@@ -33,7 +33,7 @@ class PackageChecker
         return self::getJson([self::MINOR_ONLY]);
     }
 
-    private static function getJson(array $flags = [])
+    public static function getJson(array $flags = [])
     {
         $process = self::createProcess($flags);
 
