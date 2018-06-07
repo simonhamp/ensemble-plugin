@@ -9,6 +9,7 @@ class PackageChecker
 {
     const SHOW_ALL = 'all';
     const MINOR_ONLY = 'minor';
+    const DIRECT = 'direct';
 
     protected static $cwd = './';
 
@@ -59,6 +60,10 @@ class PackageChecker
 
         if (in_array(self::MINOR_ONLY, $flags)) {
             $cmd[] = '--minor-only';
+        }
+
+        if (in_array(self::DIRECT, $flags)) {
+            $cmd[] = '--direct';
         }
 
         return new Process($cmd, realpath(static::$cwd));
