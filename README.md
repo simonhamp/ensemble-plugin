@@ -1,6 +1,13 @@
 # Ensemble Plugin
-Adds a public endpoint to your application so that the Ensemble application
-can periodically request information about your Composer packages.
+Adds a public endpoint to your application that [Ensemble](https://ens.emble.app)
+can periodically request for information about your Composer packages.
+
+## Requirements
+
+- An Ensemble account (free in beta!)
+- Laravel 5.5+
+- PHP 7+
+- Composer
 
 #### Security, Privacy & Performance
 To protect your application, we encrypt the information about your packages
