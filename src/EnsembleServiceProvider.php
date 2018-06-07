@@ -39,7 +39,9 @@ class EnsembleServiceProvider extends ServiceProvider
                 return $this->payload(
                     "ensemble_{$params->packages}",
                     function () use ($params) {
-                        return PackageChecker::{$params->packages}();
+                        $flags = explode(',', $params->packages);
+
+                        return PackageChecker::getJson($flags);
                     }
                 );
             }
