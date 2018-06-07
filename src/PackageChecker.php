@@ -18,21 +18,6 @@ class PackageChecker
         static::$cwd = $cwd;
     }
 
-    public static function all()
-    {
-        return self::getJson([self::SHOW_ALL]);
-    }
-
-    public static function outdated()
-    {
-        return self::getJson();
-    }
-
-    public static function minor()
-    {
-        return self::getJson([self::MINOR_ONLY]);
-    }
-
     public static function getJson(array $flags = [])
     {
         $process = self::createProcess($flags);
