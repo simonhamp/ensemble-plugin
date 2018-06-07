@@ -85,7 +85,7 @@ class EnsembleServiceProvider extends ServiceProvider
     {
         $payload = Cache::remember(
             $cache_key,
-            env('ENSEMBLE_CACHE_TTL', 1440),
+            env('ENSEMBLE_CACHE_TTL', 60),
             function () use ($callback) {
                 return $this->encrypter->encrypt($callback());
             }
