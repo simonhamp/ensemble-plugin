@@ -1,6 +1,8 @@
 {
     "name": "simonhamp/ensemble-plugin",
-    "description": "Connects your composer project to Ensemble (ens.emble.app)",
+    "description": "Connects your composer project to Ensemble",
+    "keywords": ["composer", "packages", "security", "updates"],
+    "homepage": "https://ens.emble.app/",
     "type": "library",
     "license": "MIT",
     "authors": [
