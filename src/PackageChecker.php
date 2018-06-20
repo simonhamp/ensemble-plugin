@@ -18,9 +18,13 @@ class PackageChecker
         static::$cwd = $cwd;
     }
 
-    public static function getJson(array $flags = [])
+    public static function getJson($command, array $flags = [])
     {
-        $process = self::createProcess($flags);
+        if (! in_array($command, ['outdated', 'licenses'])) {
+            throw new \Exception("Invalid command {$command}");
+        }
+
+        $process = self::createProcess($command, $flags);
 
         $process->run();
 
@@ -31,11 +35,11 @@ class PackageChecker
         return $process->getOutput();
     }
 
-    private static function createProcess(array $flags = [])
+    private static function createProcess($command, array $flags = [])
     {
         $cmd = [
             '/usr/local/bin/composer',
-            'outdated',
+            $command,
             '--format=json',
         ];
 
