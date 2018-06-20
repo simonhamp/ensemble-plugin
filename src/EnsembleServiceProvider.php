@@ -36,12 +36,28 @@ class EnsembleServiceProvider extends ServiceProvider
 
                 $params = $this->parseParams($key);
 
-                return $this->payload(
-                    "ensemble_{$params->packages}",
-                    function () use ($params) {
-                        $flags = explode(',', $params->packages);
+                $command = $params->command;
 
-                        return PackageChecker::getJson($flags);
+                switch ($command) {
+                    case 'outdated':
+                        $flags = $params->flags;
+                        break;
+
+                    case 'licenses':
+                        $flags = 'info';
+                        break;
+                }
+
+                return $this->payload(
+                    "ensemble_{$command}_{$flags}",
+                    function () use ($command, $flags) {
+                        if ($command == 'outdated') {
+                            $flags = explode(',', $flags);
+                        } else {
+                            $flags = [];
+                        }
+
+                        return PackageChecker::getJson($command, $flags);
                     }
                 );
             }
