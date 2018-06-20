@@ -41,4 +41,15 @@ class PackageCheckerTest extends TestCase
 
         $this->assertNotEquals($this->all, $minor);
     }
+
+    public function testCanGetPackageLicenseInfoAsJson()
+    {
+        $licenses = json_decode(
+            PackageChecker::getJson('licenses'),
+            true
+        );
+
+        $this->assertInternalType('array', $licenses);
+        $this->assertNotEmpty($licenses);
+    }
 }
