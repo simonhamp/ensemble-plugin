@@ -13,7 +13,10 @@ class PackageCheckerTest extends TestCase
     {
         PackageChecker::setCwd(realpath(__DIR__.'/../'));
 
-        $this->all = json_decode(PackageChecker::all(), true);
+        $this->all = json_decode(
+            PackageChecker::getJson('outdated', [PackageChecker::SHOW_ALL]),
+            true
+        );
     }
 
     public function testCanGetPackagesAsJson()
@@ -24,14 +27,17 @@ class PackageCheckerTest extends TestCase
 
     public function testCanGetOutdatedPackagesAsJson()
     {
-        $outdated = json_decode(PackageChecker::outdated(), true);
+        $outdated = json_decode(PackageChecker::getJson('outdated'), true);
 
         $this->assertNotEquals($this->all, $outdated);
     }
 
     public function testCanGetMinorUpdatePackagesAsJson()
     {
-        $minor = json_decode(PackageChecker::minor(), true);
+        $minor = json_decode(
+            PackageChecker::getJson('outdated', [PackageChecker::MINOR_ONLY]),
+            true
+        );
 
         $this->assertNotEquals($this->all, $minor);
     }
