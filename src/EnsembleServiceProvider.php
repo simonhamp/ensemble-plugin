@@ -17,7 +17,7 @@ class EnsembleServiceProvider extends ServiceProvider
             return;
         }
 
-        PackageChecker::setCwd(base_path());
+        AbstractRemoteProcessCall::setCwd(base_path());
 
         $key = base64_decode(env('ENSEMBLE_PRIVATE_KEY'));
         $cipher = env('ENSEMBLE_CIPHER', 'AES-256-CBC');
@@ -43,9 +43,8 @@ class EnsembleServiceProvider extends ServiceProvider
                         $flags = $params->flags;
                         break;
 
-                    case 'licenses':
+                    default:
                         $flags = 'info';
-                        break;
                 }
 
                 return $this->payload(

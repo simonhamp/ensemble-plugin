@@ -2,23 +2,13 @@
 
 namespace SimonHamp\Ensemble;
 
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-
-class PackageChecker
+class PackageChecker extends AbstractRemoteProcessCall
 {
     const SHOW_ALL = 'all';
     const MINOR_ONLY = 'minor';
     const DIRECT = 'direct';
-
-    protected static $cwd = './';
     
     protected static $composer_path;
-
-    public static function setCwd($cwd)
-    {
-        static::$cwd = $cwd;
-    }
 
     public static function getJson($command, array $flags = [])
     {
@@ -26,15 +16,7 @@ class PackageChecker
             throw new \Exception("Invalid command {$command}");
         }
 
-        $process = self::createProcess($command, $flags);
-
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        return $process->getOutput();
+        return parent::getJson($command, $flags);
     }
 
     public static function setComposerPath($path)
@@ -47,7 +29,7 @@ class PackageChecker
         return static::$composer_path ?: realpath(__DIR__.'/../../../vendor/bin/composer');
     }
 
-    private static function createProcess($command, array $flags = [])
+    protected static function buildCommand($command, $flags)
     {
         $cmd = [
             static::getComposerPath(),
@@ -67,6 +49,6 @@ class PackageChecker
             $cmd[] = '--direct';
         }
 
-        return new Process($cmd, realpath(static::$cwd));
+        return $cmd;
     }
 }
