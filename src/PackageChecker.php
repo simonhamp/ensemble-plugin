@@ -38,7 +38,7 @@ class PackageChecker
     private static function createProcess($command, array $flags = [])
     {
         $cmd = [
-            base_path(''vendor/bin/composer'),
+            base_path('vendor/bin/composer'),
             $command,
             '--format=json',
         ];
