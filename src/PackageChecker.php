@@ -50,7 +50,7 @@ class PackageChecker
     private static function createProcess($command, array $flags = [])
     {
         $cmd = [
-            static::getComposerPath();
+            static::getComposerPath(),
             $command,
             '--format=json',
         ];
