@@ -47,18 +47,7 @@ class EnsembleServiceProvider extends ServiceProvider
                         $flags = 'info';
                 }
 
-                return $this->payload(
-                    "ensemble_{$command}_{$flags}",
-                    function () use ($command, $flags) {
-                        if ($command == 'outdated') {
-                            $flags = explode(',', $flags);
-                        } else {
-                            $flags = [];
-                        }
-
-                        return PackageChecker::getJson($command, $flags);
-                    }
-                );
+                return $this->response($command, $flags);
             }
         );
     }
@@ -89,18 +78,43 @@ class EnsembleServiceProvider extends ServiceProvider
         return $now->diff($timeout)->invert;
     }
 
-    protected function payload($cache_key, $callback)
+    protected function response($command, $flags)
     {
-        $payload = Cache::remember(
-            $cache_key,
-            env('ENSEMBLE_CACHE_TTL', 60),
-            function () use ($callback) {
-                return $this->encrypter->encrypt($callback());
-            }
-        );
+        try {
+            $payload = Cache::remember(
+                "ensemble_{$command}_{$flags}",
+                env('ENSEMBLE_CACHE_TTL', 60),
+                function () use ($command, $flags) {
+                    if ($command == 'outdated') {
+                        $flags = explode(',', $flags);
+                    } else {
+                        $flags = [];
+                    }
 
-        return response()->json([
-            'payload' => $payload,
-        ]);
+                    if ($command == 'snyk') {
+                        $response = SnykTestRunner::getJson($command);
+                    } else {
+                        $response = PackageChecker::getJson($command, $flags);
+                    }
+
+                    return $this->encrypter->encrypt($response);
+                }
+            );
+        } catch (\Exception $e) {
+            $payload = $this->errorResponse($e->getMessage(), $command, $flags);
+        }
+
+        return response()->json(['payload' => $payload,]);
+    }
+
+    protected function errorResponse($message, $command, $flags)
+    {
+        return [
+            'failure' => [
+                'reason' => $message,
+                'command' => $command,
+                'flags' => $flags,
+            ],
+        ];
     }
 }

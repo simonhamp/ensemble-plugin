@@ -14,30 +14,41 @@ abstract class AbstractRemoteProcessCall
         static::$cwd = $cwd;
     }
 
+    /**
+     * Run the specified command, returning its output as JSON.
+     *
+     * @param $command
+     * @param array $flags
+     * @return string
+     * @throws \Exception
+     */
     public static function getJson($command, array $flags = [])
     {
         $process = static::createProcess($command, $flags);
 
         if (! $process instanceof Process) {
-            return static::errorResponse($process, $command, $flags);
+            throw new \Exception($process);
         }
 
         $process->run();
 
         if (! $process->isSuccessful()) {
-            $e = new ProcessFailedException($process);
-            return static::errorResponse($e->getMessage(), $command, $flags);
+            throw new ProcessFailedException($process);
         }
 
         return $process->getOutput();
     }
 
+    /**
+     * @param string $command
+     * @param array $flags
+     * @return Process
+     * @throws \Exception
+     */
     protected static function createProcess($command, array $flags = [])
     {
-        try {
-            static::canRunCommand($command, $flags);
-        } catch (\Exception $e) {
-            return $e->getMessage();
+        if (! static::canRunCommand($command, $flags)) {
+            throw new \Exception("Command '{$command}' cannot be executed: Failed prerequisite check.");
         }
 
         $command = static::buildCommand($command, $flags);
@@ -45,20 +56,16 @@ abstract class AbstractRemoteProcessCall
         return new Process($command, realpath(static::$cwd));
     }
 
+    /**
+     * Check any command prerequisites to determine if the command can be successfully executed.
+     *
+     * @param string $command
+     * @param array $flags
+     * @return bool
+     */
     protected static function canRunCommand($command, $flags)
     {
         return true;
-    }
-
-    protected static function errorResponse($message, $command, $flags)
-    {
-        return json_encode([
-            'failure' => [
-                'reason' => $message,
-                'command' => $command,
-                'flags' => $flags,
-            ],
-        ]);
     }
 
     abstract protected static function buildCommand($command, $flags);
