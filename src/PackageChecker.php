@@ -13,7 +13,7 @@ class PackageChecker extends AbstractRemoteProcessCall
     public static function getJson($command, array $flags = [])
     {
         if (! in_array($command, ['outdated', 'licenses'])) {
-            throw new \Exception("Invalid command {$command}");
+            throw new \Exception("Invalid command '{$command}'");
         }
 
         return parent::getJson($command, $flags);
