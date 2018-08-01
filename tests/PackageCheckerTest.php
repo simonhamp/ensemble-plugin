@@ -13,6 +13,8 @@ class PackageCheckerTest extends TestCase
     {
         PackageChecker::setCwd(realpath(__DIR__.'/../'));
 
+        PackageChecker::setComposerPath(realpath(__DIR__.'/../vendor/bin/composer'));
+
         $this->all = json_decode(
             PackageChecker::getJson('outdated', [PackageChecker::SHOW_ALL]),
             true
