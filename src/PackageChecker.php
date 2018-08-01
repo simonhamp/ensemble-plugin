@@ -12,6 +12,8 @@ class PackageChecker
     const DIRECT = 'direct';
 
     protected static $cwd = './';
+    
+    protected static $composer_path;
 
     public static function setCwd($cwd)
     {
@@ -35,10 +37,20 @@ class PackageChecker
         return $process->getOutput();
     }
 
+    public static function setComposerPath($path)
+    {
+        static::$composer_path = $path;
+    }
+
+    public static function getComposerPath()
+    {
+        return static::$composer_path ?: realpath(__DIR__.'/../../../vendor/bin/composer');
+    }
+
     private static function createProcess($command, array $flags = [])
     {
         $cmd = [
-            base_path('vendor/bin/composer'),
+            static::getComposerPath();
             $command,
             '--format=json',
         ];
