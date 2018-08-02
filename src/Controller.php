@@ -81,6 +81,10 @@ class Controller
                     $response = [];
 
                     switch ($command) {
+                        case 'security':
+                            $response = SecurityChecker::getJson($command);
+                            break;
+
                         case 'outdated':
                         case 'licenses':
                             $response = PackageChecker::getJson($command, $flags);
