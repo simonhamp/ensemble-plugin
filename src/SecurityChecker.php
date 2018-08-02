@@ -20,7 +20,7 @@ class SecurityChecker extends AbstractRemoteProcessCall
     {
         $cmd = [
             static::getCheckerPath(),
-            $command,
+            'security:check',
             '--format=json',
         ];
 
