@@ -7,17 +7,8 @@ class PackageChecker extends AbstractRemoteProcessCall
     const SHOW_ALL = 'all';
     const MINOR_ONLY = 'minor';
     const DIRECT = 'direct';
-    
+
     protected static $composer_path;
-
-    public static function getJson($command, array $flags = [])
-    {
-        if (! in_array($command, ['outdated', 'licenses'])) {
-            throw new \Exception("Invalid command '{$command}'");
-        }
-
-        return parent::getJson($command, $flags);
-    }
 
     public static function setComposerPath($path)
     {
