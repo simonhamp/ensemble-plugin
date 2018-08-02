@@ -78,6 +78,8 @@ class Controller
                         $flags = [];
                     }
 
+                    $response = [];
+
                     switch ($command) {
                         case 'outdated':
                         case 'licenses':
