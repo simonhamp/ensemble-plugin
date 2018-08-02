@@ -95,7 +95,7 @@ class Controller
                 }
             );
         } catch (\Exception $e) {
-            $payload = $this->errorResponse($e->getMessage(), $command, $flags);
+            $payload = $this->encrypter->encrypt($this->errorResponse($e->getMessage(), $command, $flags));
         }
 
         return response()->json(['payload' => $payload,]);
