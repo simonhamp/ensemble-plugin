@@ -2,6 +2,8 @@
 Adds a public endpoint to your application that [Ensemble](https://ens.emble.app)
 can periodically request for information about your Composer packages.
 
+🙏 Please consider sponsoring the development of Ensemble 💚
+
 ## Requirements
 
 - An Ensemble account (completely free!)
