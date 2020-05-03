@@ -4,10 +4,9 @@ can periodically request for information about your Composer packages.
 
 ## Requirements
 
-- An Ensemble account (free in beta!)
-- Laravel 5.5+
+- An Ensemble account (completely free!)
+- Laravel 7+
 - PHP 7+
-- Composer
 
 #### Security, Privacy & Performance
 To protect your application, we encrypt the information about your packages
@@ -41,12 +40,11 @@ in a row, we'll stop trying until you tell us otherwise.
 $ composer require simonhamp/ensemble-plugin
 ```
 
+This will install the latest version of the plugin. You can install earlier versions that will support Laravel 5.5+, but I highly recommend that you upgrade your app to the latest version of Laravel.
+
 **NB: This package currently only supports Laravel.**
 If you'd like to use Ensemble with another framework, please
 [raise an issue](https://github.com/simonhamp/ensemble-plugin/issues/new?template=integration.md)
-
-### Laravel
-If you're running Laravel 5.5+, the service provider will be autoloaded.
 
 ##### Configure
 Add the following to your `.env`:
