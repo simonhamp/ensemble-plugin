@@ -23,7 +23,7 @@ class PackageCheckerTest extends TestCase
 
     public function testCanGetPackagesAsJson()
     {
-        $this->assertInternalType('array', $this->all);
+        $this->assertIsArray($this->all);
         $this->assertNotEmpty($this->all);
     }
 
@@ -51,7 +51,7 @@ class PackageCheckerTest extends TestCase
             true
         );
 
-        $this->assertInternalType('array', $licenses);
+        $this->assertIsArray($licenses);
         $this->assertNotEmpty($licenses);
     }
 }
