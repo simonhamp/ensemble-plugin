@@ -9,7 +9,7 @@ class PackageCheckerTest extends TestCase
 {
     private $all;
 
-    public function setUp()
+    protected function setUp() : void
     {
         PackageChecker::setCwd(realpath(__DIR__.'/../'));
 
