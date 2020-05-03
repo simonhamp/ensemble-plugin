@@ -5,6 +5,7 @@ namespace SimonHamp\Ensemble;
 use Illuminate\Http\Request;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Controller
 {
@@ -23,7 +24,11 @@ class Controller
     public function ensemble(Request $request) {
         $key = $request->input('key');
 
-        $params = $this->parseParams($key);
+        try {
+            $params = $this->parseParams($key);
+        } catch (DecryptException $e) {
+            return $this->errorResponse($e->getMessage());
+        }
 
         $command = $params->command;
 
@@ -72,43 +77,58 @@ class Controller
                 "ensemble_{$command}_{$flags}",
                 env('ENSEMBLE_CACHE_TTL', 60),
                 function () use ($command, $flags) {
-                    if ($command == 'outdated') {
-                        $flags = explode(',', $flags);
-                    } else {
-                        $flags = [];
-                    }
+                    $result = $this->executeCommand($command, $flags);
 
-                    $response = [];
-
-                    switch ($command) {
-                        case 'security':
-                            $response = SecurityChecker::getJson($command);
-                            break;
-
-                        case 'outdated':
-                        case 'licenses':
-                            $response = PackageChecker::getJson($command, $flags);
-                            break;
-                    }
-
-                    return $this->encrypter->encrypt($response);
+                    return $this->encrypter->encrypt($result);
                 }
             );
         } catch (\Exception $e) {
-            $payload = $this->encrypter->encrypt($this->errorResponse($e->getMessage(), $command, $flags));
+            return $this->errorResponse($e->getMessage(), $command, $flags);
         }
 
         return response()->json(['payload' => $payload,]);
     }
 
-    protected function errorResponse($message, $command, $flags)
+    /**
+     * @param string $command
+     * @param string $flags
+     * @return array|string
+     * @throws \Exception
+     */
+    protected function executeCommand($command, $flags)
     {
-        return [
+        if ($command === 'outdated') {
+            $flags = explode(',', $flags);
+        } else {
+            $flags = [];
+        }
+
+        $result = [];
+
+        switch ($command) {
+            case 'security':
+                $result = SecurityChecker::getJson($command);
+                break;
+
+            case 'outdated':
+            case 'licenses':
+                $result = PackageChecker::getJson($command, $flags);
+                break;
+        }
+
+        return $result;
+    }
+
+    protected function errorResponse($message, $command = null, $flags = null)
+    {
+        $payload = $this->encrypter->encrypt([
             'failure' => [
                 'reason' => $message,
                 'command' => $command,
                 'flags' => $flags,
             ],
-        ];
+        ]);
+
+        return response()->json(['payload' => $payload,], 400);
     }
 }
