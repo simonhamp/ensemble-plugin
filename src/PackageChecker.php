@@ -17,7 +17,7 @@ class PackageChecker extends AbstractRemoteProcessCall
 
     public static function getComposerPath()
     {
-        return static::$composer_path ?: realpath(__DIR__.'/../../../bin/composer');
+        return static::$composer_path ?: env('ENSEMBLE_COMPOSER_PATH', realpath(__DIR__.'/../../../bin/composer'));
     }
 
     protected static function buildCommand($command, $flags)
